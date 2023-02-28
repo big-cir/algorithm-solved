@@ -6,18 +6,21 @@ import java.util.StringTokenizer;
 public class Main {
 
     public static int solution(int N, int M, int[] A) {
-        int answer = 0, sum = 0;
-        for (int i = 0; i < N; i++) {
-            sum = A[i];
-            for (int j = 0; j < N; j++) {
-                if (i == j) continue;
-                sum += A[j];
+        int sum = 0, lt = 0, answer = 0;
+
+        for (lt = 0; lt < N; lt++) {
+            int rt = lt + 1;
+            sum = A[lt];
+
+            while (rt < N) {
+                sum += A[rt];
                 if (sum == M) answer++;
-                sum -= A[j];
+                sum -= A[rt];
+                rt++;
             }
         }
 
-        return answer / 2;
+        return answer;
     }
 
     public static void main(String[] args) throws IOException {
