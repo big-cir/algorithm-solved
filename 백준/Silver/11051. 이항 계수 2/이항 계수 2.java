@@ -21,7 +21,7 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
-        dp = new int[N + 1][N + 1];
+        dp = new int[N + 1][K + 1];
 
         int answer = combi(N, K) ;
         System.out.println(answer);
