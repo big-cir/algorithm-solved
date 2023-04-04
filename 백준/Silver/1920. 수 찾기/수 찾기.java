@@ -5,41 +5,51 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N, M, answer;
-    static int[] A;
 
-    public static int solution(int target) {
-        int lt = 0, rt = N - 1;
-        while (lt <= rt) {
-            int mid = (lt + rt) / 2;
-            if (target == A[mid]) {
-                answer = 1;
-                return answer;
+    public static int findNum(int number, int[] A) {
+        int lt = 0;
+        int rt = A.length;
+        int mid = (lt + rt) / 2;
+
+        while (lt < rt) {
+            if (A[mid] == number) {
+                return number;
             }
-            if (target < A[mid]) {
-                rt = mid - 1;
-            } else {
+
+            if (A[mid] < number) {
                 lt = mid + 1;
+                mid = (lt + rt) / 2;
+            } else {
+                rt = mid - 1;
+                mid = (lt + rt) / 2;
             }
         }
-        return answer = 0;
+        return -1;
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
-        A = new int[N];
+        int N = Integer.parseInt(br.readLine());
+        int[] A = new int[N];
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
             A[i] = Integer.parseInt(st.nextToken());
         }
         Arrays.sort(A);
 
-        M = Integer.parseInt(br.readLine());
+
+        int M = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
+
+        // 1
         for (int i = 0; i < M; i++) {
-            int target = Integer.parseInt(st.nextToken());
-            System.out.println(solution(target));
+            int num = Arrays.binarySearch(A, Integer.parseInt(st.nextToken()));
+            if (num < 0) {
+                System.out.println(0);
+            } else {
+                System.out.println(1);
+            }
         }
+
     }
 }
