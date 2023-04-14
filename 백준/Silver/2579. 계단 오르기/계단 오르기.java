@@ -6,14 +6,6 @@ public class Main {
     static int[] A;
     static Integer[] dp;
 
-    public static int recur_sol(int N) {
-        if (dp[N] != null) {
-            return dp[N];
-        } else {
-            return dp[N] = Math.max(recur_sol(N - 2), recur_sol(N - 3) + A[N - 1]) + A[N];
-        }
-    }
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
@@ -30,7 +22,9 @@ public class Main {
             dp[2] = Math.max(A[2], A[1] + A[2]);
         }
 
-        recur_sol(N);
+        for (int i = 3; i < N + 1; i++) {
+            dp[i] = Math.max(dp[i - 2], dp[i - 3] + A[i - 1]) + A[i];
+        }
         System.out.println(dp[N]);
     }
 }
