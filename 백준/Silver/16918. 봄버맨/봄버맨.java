@@ -20,7 +20,7 @@ public class Main {
         }
     }
 
-        public static void solution(int N) {
+    public static void solution(int N) {
         int curTime = 0;
 
         while (curTime++ < N) {
@@ -51,20 +51,9 @@ public class Main {
                         }
                     }
                 }
-
-                if (N % 2 == 0) {
-                    for (int i = 0; i < R; i++) {
-                        for (int j = 0; j < C; j++) {
-                            if (board[i][j] == 0) {
-                                board[i][j] = -1;
-                            }
-                        }
-                    }
-                }
             }
         }
     }
-
 
     // 1. 폭탄 특정 위치 설치
     // 2. 2초 때, 모든 칸에 폭탄 설치
