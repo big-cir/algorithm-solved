@@ -8,28 +8,25 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
         Stack<Character> stack = new Stack<>();
-
+        String answer;
         for (int i = 0; i < N; i++) {
-            stack.clear();
-            String answer = "YES";
-            char[] chars = br.readLine().toCharArray();
+            answer = "YES";
+            char[] inputs = br.readLine().toCharArray();
 
-            for (char x : chars) {
-                if (x == '(') {
-                    stack.push(x);
-                } else {
+            for (char x : inputs) {
+                if (x == '(') stack.push(x);
+                else {
                     if (stack.isEmpty()) {
                         answer = "NO";
+                        break;
                     } else {
                         stack.pop();
                     }
                 }
             }
+            if (!stack.isEmpty()) answer = "NO";
 
-            if (!stack.isEmpty()) {
-                answer = "NO";
-            }
-
+            stack.clear();
             System.out.println(answer);
         }
     }
