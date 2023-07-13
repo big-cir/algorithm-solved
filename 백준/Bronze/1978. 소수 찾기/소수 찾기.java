@@ -20,7 +20,8 @@ public class Main {
         for (int x : parl) {
             if (x == 1) continue;
             boolean ch = true;
-            for (int i = 2; i < x; i++) {
+
+            for (int i = 2; i <= Math.sqrt(x); i++) {
                 if (x % i == 0) ch = false;
             }
 
