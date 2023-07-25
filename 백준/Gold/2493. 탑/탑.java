@@ -5,52 +5,40 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
-
-    public static class Top {
-        private int position;
-        private int h;
-
-        public Top(int position, int h) {
-            this.position = position;
-            this.h = h;
-        }
-    }
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        int[] answer = new int[N];
-
+        Stack<Integer> val = new Stack<>();
+        Stack<Integer> pos = new Stack<>();
+        StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(br.readLine());
-        Stack<Top> stack = new Stack<>();
         for (int i = 0; i < N; i++) {
-            int height = Integer.parseInt(st.nextToken());
-            Top top = new Top(i + 1, height);
-
-            if (stack.isEmpty()) {
-                answer[i] = 0;
-                stack.push(top);
+            int input = Integer.parseInt(st.nextToken());
+            if (val.isEmpty()) {
+                sb.append(0).append(" ");
+                val.push(input);
+                pos.push(i + 1);
             } else {
                 while (true) {
-                    if (stack.isEmpty()) {
-                        answer[i] = 0;
-                        stack.push(top);
+                    if (val.isEmpty()) {
+                        sb.append(0).append(" ");
+                        val.push(input);
+                        pos.push(i + 1);
                         break;
                     }
 
-                    if (stack.peek().h > top.h) {
-                        answer[i] = stack.peek().position;
-                        stack.push(top);
+                    if (val.peek() > input) {
+                        sb.append(pos.peek()).append(" ");
+                        val.push(input);
+                        pos.push(i + 1);
                         break;
                     } else {
-                        stack.pop();
+                        val.pop();
+                        pos.pop();
                     }
                 }
             }
         }
-
-        for (int x : answer) {
-            System.out.print(x + " ");
-        }
+        System.out.println(sb);
     }
 }
