@@ -72,7 +72,6 @@ public class Main {
                 max = i;
             }
         }
-
         Arrays.fill(dis, 0);
         Arrays.fill(ch, 0);
 
