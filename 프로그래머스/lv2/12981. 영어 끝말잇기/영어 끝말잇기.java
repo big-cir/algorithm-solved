@@ -4,37 +4,40 @@ import java.util.Set;
 
 class Solution {
     public int[] solution(int n, String[] words) {
-        int idx = 1;
-        int seq = 1;
+        int 번호 = 1;
+        int 차례 = 1;
+
         boolean flag = true;
-        Set<String> word = new HashSet<>();
-        word.add(words[0]);
-
-        for (int i = 1; i < words.length; i++) {
-            String x = words[i];
-            idx++;
-            if (idx == n + 1) {
-                idx = 1;
-                seq++;
+        int pos = 0;
+        Set<String> set = new HashSet<>();
+        set.add(words[pos++]);
+        
+        while (pos < words.length) {
+            번호++;
+            if (번호 == n + 1) {
+                번호 = 1;
+                차례++;
             }
-
-            if (!word.contains(x)) {
-                if (words[i - 1].charAt(words[i - 1].length() - 1) != x.charAt(0)) {
+            
+            if (!set.contains(words[pos])) {
+                if (words[pos - 1].charAt(words[pos - 1].length() - 1) != words[pos].charAt(0)) {
                     flag = false;
                     break;
                 }
-                word.add(x);
+                set.add(words[pos]);
             } else {
                 flag = false;
                 break;
             }
+            
+            pos++;
         }
-
+        
         if (flag) {
-            idx = 0;
-            seq = 0;
+            번호 = 0;
+            차례 = 0;
         }
-
-        return new int[] {idx, seq};
+        
+        return new int[] {번호, 차례};
     }
 }
