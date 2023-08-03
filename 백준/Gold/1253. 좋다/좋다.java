@@ -1,55 +1,46 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
-import java.io.*;
-import java.util.*;
-import java.util.function.*;
- 
 public class Main {
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-   
     public static void main(String[] args) throws IOException {
-        int count = Integer.parseInt(br.readLine());
-        int[] arr = new int[count];
- 
-        int idx = 0;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        int[] arr = new int[N];
         StringTokenizer st = new StringTokenizer(br.readLine());
-        while(st.hasMoreTokens()){
-            arr[idx++] = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
         Arrays.sort(arr);
-        int goodNumber = 0;
- 
-        
-        for(int i = 0; i<arr.length; i++) {
-            int findNumber = arr[i];
- 
-            // 투포인터
-            int s = 0; // 시작지점
-            int e = arr.length - 1; // 배열 끝지점
-            int sum = 0;
- 
- 
-            while(s < e){
-                sum = arr[s] + arr[e];
-                if(sum == findNumber){
-                    if(i == s)
-                        s++;
-                    else if(e == i)
-                        e--;
-                    else{
-                        goodNumber++;
+
+        int answer = 0;
+        for (int i = 0; i < N; i++) {
+            int val = arr[i], sum = 0;
+            int lt = 0, rt = N - 1;
+
+            while (lt < rt) {
+                sum = arr[lt] + arr[rt];
+                if (sum == val) {
+                    if (lt == i) lt++;
+                    else if (rt == i) rt--;
+                    else {
+                        answer++;
                         break;
                     }
                 }
- 
-                if(arr[s] + arr[e] > findNumber) //find 보다 크면 e--
-                    e--;
-                else if(arr[s] + arr[e] < findNumber) // find보다 작으면 s++
-                    s++;
- 
- 
+
+                if (sum > val) {
+                    rt--;
+                }
+
+                if (sum < val) {
+                    lt++;
+                }
+
             }
         }
-        System.out.println(goodNumber);
+        System.out.println(answer);
     }
 }
- 
