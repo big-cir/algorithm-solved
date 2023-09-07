@@ -1,60 +1,58 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N, M, answer = 0;
+    static int N, M;
+    static boolean flag = false;
     static int[] ch;
-    static ArrayList<ArrayList<Integer>> graph;
+    static List<List<Integer>> map;
 
-    public static void DFS(int Level, int start_v) {
+    public static void dfs(int Level, int v) {
         if (Level == 5) {
-            answer = 1;
+            flag = true;
             return;
-        } else {
-            for (int i = 0; i < graph.get(start_v).size(); i++) {
-                if (ch[graph.get(start_v).get(i)] == 0) {
-                    ch[graph.get(start_v).get(i)] = 1;
-                    DFS(Level + 1, graph.get(start_v).get(i));
-                    ch[graph.get(start_v).get(i)] = 0;
-                }
+        }
+
+        for (int x : map.get(v)) {
+            if (ch[x] == 0) {
+                ch[x] = 1;
+                dfs(Level + 1, x);
+                ch[x] = 0;
             }
         }
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
+        map = new ArrayList<>();
         ch = new int[N];
 
-        graph = new ArrayList<>();
         for (int i = 0; i < N; i++) {
-            graph.add(new ArrayList<>());
+            map.add(new ArrayList<>());
         }
 
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int v1 = Integer.parseInt(st.nextToken());
             int v2 = Integer.parseInt(st.nextToken());
-            graph.get(v1).add(v2);
-            graph.get(v2).add(v1);
+            map.get(v1).add(v2);
+            map.get(v2).add(v1);
         }
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < map.size(); i++) {
             ch[i] = 1;
-            DFS(1, i);
+            dfs(1, i);
             ch[i] = 0;
-
-            if (answer == 1) {
-                break;
-            }
+            if (flag) break;
         }
 
-        bw.write(String.valueOf(answer));
-        bw.flush();
-        bw.close();
+        System.out.println(flag ? "1" : "0");
     }
 }
