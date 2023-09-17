@@ -2,60 +2,89 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int[] dx = {-1, 0, 1, 0};
-    static int[] dy = {0, 1, 0, -1};
-    static int[][] map, dis;
 
-    public static void bfs(int N) {
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[] {0, 0});
+	static class Node implements Comparable<Node>{
+		int x;
+		int y;
+		int cost;
+		
+		public Node(int x, int y, int cost) {
+			this.x = x;
+			this.y = y;
+			this.cost = cost;
+			
+		}
 
-        while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
-
-            for (int i = 0; i < 4; i++) {
-                int nx = cur[0] + dx[i];
-                int ny = cur[1] + dy[i];
-
-                if (nx >= 0 && nx < N && ny >= 0 && ny < N) {
-                    if (dis[nx][ny] > map[nx][ny] + dis[cur[0]][cur[1]]) {
-                        dis[nx][ny] = map[nx][ny] + dis[cur[0]][cur[1]];
-                        queue.offer(new int[] {nx, ny});
-                    }
-                }
-            }
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        int N = Integer.parseInt(br.readLine());
-        int tc = 1;
-
-        while (N != 0) {
-            map = new int[N][N];
-            dis = new int[N][N];
-            for (int i = 0; i < N; i++) {
-                st = new StringTokenizer(br.readLine());
-                for (int j = 0; j < N; j++) {
-                    map[i][j] = Integer.parseInt(st.nextToken());
-                }
-            }
-
-            for (int i = 0; i < N; i++) {
-                Arrays.fill(dis[i], Integer.MAX_VALUE);
-            }
-            dis[0][0] = map[0][0];
-            bfs(N);
-            System.out.println("Problem " + tc++ + ": " + dis[N - 1][N - 1]);
-
-            N = Integer.parseInt(br.readLine());
-        }
-    }
+		@Override
+		public int compareTo(Node o) {
+			return this.cost - o.cost;
+		}
+	}
+	static int n;
+	static int[][] map;
+	static int[] dx = {-1, 1, 0, 0};
+	static int[] dy = {0, 0, -1, 1};
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+		int idx=1;
+		while(!(line = br.readLine()).equals("0")) {
+			n = Integer.parseInt(line);
+			map = new int[n][n];
+			
+			StringTokenizer st = null;
+			for(int i=0; i<n; i++) {
+				st = new StringTokenizer(br.readLine());
+				for(int j=0; j<n; j++) {
+					map[i][j] = Integer.parseInt(st.nextToken());
+				}
+			}
+			
+			int cost = bfs();
+			sb.append("Problem " + idx + ": " + cost+"\n");
+			idx++;
+		}
+		System.out.println(sb.toString());
+	}
+	
+	static int bfs() {
+		Queue<Node> q = new PriorityQueue<>();
+		int[][] move = new int[n][n];
+		for(int i=0; i<n; i++) {
+			Arrays.fill(move[i], Integer.MAX_VALUE);
+		}
+		
+		q.add(new Node(0, 0, map[0][0]));
+		move[0][0] = map[0][0];
+		
+		while(!q.isEmpty()) {
+			Node pos = q.poll();
+			int px = pos.x, py = pos.y;
+			int cost = pos.cost;
+			
+			if(px == n-1 && py == n-1) {
+				return cost;
+			}
+			
+			for(int i=0; i<4; i++) {
+				int nx = px + dx[i];
+				int ny = py + dy[i];
+				
+				if(nx<0 || nx>n-1 || ny<0 || ny>n-1) continue;
+				
+				if(cost+map[ny][nx] < move[ny][nx]) {
+					move[ny][nx] =cost+map[ny][nx];
+					q.add(new Node(nx,ny,cost+map[ny][nx]));
+				}
+				
+			}
+		}
+		return -1;
+	}
 }
