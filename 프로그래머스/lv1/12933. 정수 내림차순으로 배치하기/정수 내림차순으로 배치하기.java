@@ -1,21 +1,14 @@
-import java.util.*;
-
+import java.util.Arrays;
 class Solution {
     public long solution(long n) {
-        List<String> list = new ArrayList<>();
-        
-        while (n > 0) {
-            list.add(String.valueOf(n % 10));
-            n /= 10;
-        }
-        
-        Collections.sort(list, Collections.reverseOrder());
-        
         String answer = "";
-        for (String x : list) {
-            answer += x;
+        int[] arr = Arrays.stream(String.valueOf(n).split("")).mapToInt(Integer::parseInt).toArray();
+        Arrays.sort(arr);
+
+        for (int i = arr.length - 1; i >= 0; i--) {
+            answer += String.valueOf(arr[i]);
         }
-        
+
         return Long.parseLong(answer);
     }
 }
