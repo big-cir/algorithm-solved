@@ -1,64 +1,99 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 public class Main {
-    static StringBuilder sb = new StringBuilder();
+    static int N;
+    static Map<String, Node> tree;
 
     static class Node {
-        private char lt, rt;
+        String parent;
+        Node lt;
+        Node rt;
 
-        public Node(char lt, char rt) {
+        public Node(String parent) {
+            this.parent = parent;
+            this.lt = null;
+            this.rt = null;
+        }
+
+        public void setChild(Node lt, Node rt) {
             this.lt = lt;
             this.rt = rt;
         }
-    }
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        Map<Character, Node> map = new HashMap<>();
 
-        StringTokenizer st;
-        // . == 46
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            char data = st.nextToken().charAt(0);
-            char lt = st.nextToken().charAt(0);
-            char rt = st.nextToken().charAt(0);
-            map.put(data, new Node(lt, rt));
+        public String getParent() {
+            return parent;
         }
 
-        preOrder(map, 'A');
+        public Node getLt() {
+            return lt;
+        }
+
+        public Node getRt() {
+            return rt;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+
+        tree = new HashMap<>();
+        StringTokenizer st;
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            String parent = st.nextToken();
+            String lt = st.nextToken();
+            String rt = st.nextToken();
+            Node node = new Node(parent);
+            node.setChild(new Node(lt), new Node(rt));
+
+            tree.put(parent, node);
+        }
+        StringBuilder sb = new StringBuilder();
+        preOrder("A", sb);
         sb.append("\n");
-        inOrder(map, 'A');
+
+        inOrder("A", sb);
         sb.append("\n");
-        postOrder(map, 'A');
-        System.out.println(sb.toString());
+
+        postOrder("A", sb);
+        sb.append("\n");
+
+        System.out.println(sb);
     }
 
-    public static void preOrder(Map<Character, Node> map, Character parent) {
-        if (parent == '.') return;
+    public static void preOrder(String parent, StringBuilder sb) {
+        if (parent.equals(".")) {
+            return;
+        }
+        Node childNode = tree.get(parent);
         sb.append(parent);
-        Node childNode = map.get(parent);
-        preOrder(map, childNode.lt);
-        preOrder(map, childNode.rt);
+        preOrder(childNode.lt.getParent(), sb);
+        preOrder(childNode.rt.getParent(), sb);
     }
 
-    public static void inOrder(Map<Character, Node> map, Character parent) {
-        if (parent == '.') return;
-        Node childNode = map.get(parent);
-        inOrder(map, childNode.lt);
+    public static void inOrder(String parent, StringBuilder sb) {
+        if (parent.equals(".")) {
+            return;
+        }
+        Node childNode = tree.get(parent);
+        inOrder(childNode.lt.getParent(), sb);
         sb.append(parent);
-        inOrder(map, childNode.rt);
+        inOrder(childNode.rt.getParent(), sb);
     }
 
-    public static void postOrder(Map<Character, Node> map, Character parent) {
-        if (parent == '.') return;
-        Node childNode = map.get(parent);
-        postOrder(map, childNode.lt);
-        postOrder(map, childNode.rt);
+    public static void postOrder(String parent, StringBuilder sb) {
+        if (parent.equals(".")) {
+            return;
+        }
+        Node childNode = tree.get(parent);
+        postOrder(childNode.lt.getParent(), sb);
+        postOrder(childNode.rt.getParent(), sb);
         sb.append(parent);
     }
 }
-
