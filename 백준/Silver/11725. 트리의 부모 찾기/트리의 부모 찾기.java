@@ -1,55 +1,46 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static List<List<Integer>> graph;
-    public static int[] ch, parent;
-
-    public static void bfs(int vertex) {
-        Queue<Integer> queue = new LinkedList<>();
-        ch[vertex] = 1;
-        queue.offer(vertex);
-
-        while (!queue.isEmpty()) {
-            int currentV = queue.poll();
-
-            for (int x : graph.get(currentV)) {
-                if (ch[x] == 0) {
-                    ch[x] = 1;
-                    parent[x] = currentV;
-                    queue.offer(x);
-                }
-            }
-        }
-    }
-
+    static int N;
+    static int[] ch;
+    static List<List<Integer>> graph;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());        // 노드 개수
+        N = Integer.parseInt(br.readLine());
         ch = new int[N + 1];
-        parent = new int[N + 1];
-
         graph = new ArrayList<>();
-        for (int i = 0; i <= N; i++) {
+        for (int i = 0 ; i <= N; i++) {
             graph.add(new ArrayList<>());
         }
 
+        StringTokenizer st;
         for (int i = 0; i < N - 1; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
+            st = new StringTokenizer(br.readLine());
             int v1 = Integer.parseInt(st.nextToken());
             int v2 = Integer.parseInt(st.nextToken());
-
             graph.get(v1).add(v2);
             graph.get(v2).add(v1);
         }
+        int[] parent = new int[N + 1];
+        dfs(1, parent);
 
-        bfs(1);
+        for (int i = 2; i <= N; i++) {
+            System.out.println(parent[i]);
+        }
+    }
 
-        for (int x : parent) {
-            if (x == 0) continue;
-            System.out.println(x);
+    public static void dfs(int vertex,int[] parent) {
+        for (int x : graph.get(vertex)) {
+            if (ch[x] == 0) {
+                ch[x] = 1;
+                parent[x] = vertex;
+                dfs(x, parent);
+            }
         }
     }
 }
