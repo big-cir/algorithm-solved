@@ -5,40 +5,40 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
+    static int N, M; 
+    static int answer;
+    static int[] arr;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        int[] A = new int[N];
+        N = Integer.parseInt(br.readLine());
+        arr = new int[N];
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            A[i] = Integer.parseInt(st.nextToken());
+            arr[i] = Integer.parseInt(st.nextToken());
         }
-        int M = Integer.parseInt(br.readLine());
-        Arrays.sort(A);
-        System.out.println(toUpperCase(N, A, M));
+        M = Integer.parseInt(br.readLine());
+        answer = 0;
 
-    }
+        Arrays.sort(arr);
+        int max = arr[N - 1];
 
-    private static int toUpperCase(int n, int[] a, int m) {
         int lt = 0;
-        int rt = a[n - 1];
+        int rt = max;
 
         while (lt <= rt) {
             int sum = 0;
             int mid = (lt + rt) / 2;
-            for (int x : a) {
-                if (x >= mid) sum += mid;
-                else {
-                    sum += x;
-                }
-            }
-            if (sum > m) {
-                rt = mid - 1;
-            } else {
-                lt = mid + 1;
-            }
-        }
 
-        return rt;
+            for (int x : arr) {
+                if (x > mid) {
+                    sum += mid;
+                    continue;
+                }
+                sum += x;
+            }
+            if (sum > M) rt = mid - 1;
+            if (sum <= M) lt = mid + 1;
+        }
+        System.out.println(rt);
     }
 }
