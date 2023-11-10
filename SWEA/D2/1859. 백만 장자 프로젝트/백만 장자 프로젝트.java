@@ -1,36 +1,51 @@
-import java.io.*;
-import java.util.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Solution {
-
-    public static long getMaxPrice(List<Integer> list) {
-        long result = 0;
-        int max = Collections.max(list);
-
-        for (int i = 0; i < list.size(); i++) {
-            if (max == list.get(i)) {
-                if (i + 1 == list.size()) continue;
-                max = Collections.max(list.subList(i + 1, list.size()));
-            } else {
-                result += max - list.get(i);
-            }
-        }
-        return result;
-    }
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine());
+        int tc = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < T; i++) {
+        for (int i = 0; i < tc; i++) {
             int N = Integer.parseInt(br.readLine());
-            List<Integer> price = new ArrayList<>();
+
+            Queue<Integer> queue = new LinkedList<>();
             StringTokenizer st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
-                price.add(Integer.parseInt(st.nextToken()));
+                queue.offer(Integer.parseInt(st.nextToken()));
             }
-            System.out.println("#" + (i + 1) + " " + getMaxPrice(price));
+
+            System.out.println("#" + (i + 1) + " " + solution(queue, N));
         }
     }
-}
 
+    private static long solution(Queue<Integer> queue, int N) {
+        long answer = 0;
+        int max = Collections.max(queue);
+
+        Queue<Integer> save = new LinkedList<>();
+        while (!queue.isEmpty()) {
+            int value = queue.poll();
+
+            if (max == value) {
+                while (!save.isEmpty()) {
+                    answer += (max - save.poll());
+                }
+
+                if (!queue.isEmpty()) {
+                    max = Collections.max(queue);
+                }
+            } else {
+                save.add(value);
+            }
+        }
+
+        return answer;
+    }
+}
