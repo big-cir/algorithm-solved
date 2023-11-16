@@ -1,54 +1,59 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
-
+import java.util.*;
 public class Solution {
-    public static int hit, max;
 
-    public static int stringToInt(String s) {
-        return Integer.valueOf(s);
+    static int max;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int tc = Integer.parseInt(br.readLine());
+
+        for (int l = 1;  l <= tc; l++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            int[] numbers = Arrays.stream(st.nextToken().split("")).mapToInt(Integer::parseInt).toArray();
+            int Level = Integer.parseInt(st.nextToken());
+            
+            if (Level > numbers.length) {
+                Level = numbers.length;
+            }
+
+            max = Integer.MIN_VALUE;
+            backTracking(numbers, Level, 0, 0);
+
+            System.out.println("#" + l + " " + max);
+        }
     }
 
-    public static void swap(String[] number, int coordi1, int coordi2) {
-        String tmp = number[coordi1];
-        number[coordi1] = number[coordi2];
-        number[coordi2] = tmp;
-    }
-
-    public static void solution(int Level, String[] number, int start) {
-        if (Level == hit) {
-            max = Math.max(max, stringToInt(String.join("", number)));
+    private static void backTracking(int[] numbers, int Level, int count, int startIdx) {
+        int[] copyArr = numbers.clone();
+        if (count == Level) {
+            max = Math.max(max, toInteger(numbers));
             return;
         }
 
-        for (int i = start; i < number.length - 1; i++) {
-            for (int j = i + 1; j < number.length; j++) {
-                swap(number, i, j);
-                solution(Level + 1, number, i);
-                swap(number, i, j);
+        for (int i = startIdx; i < numbers.length - 1; i++) {
+            for (int j = i + 1; j < numbers.length; j++) {
+                swap(copyArr, i, j);
+                backTracking(copyArr, Level, count + 1, i);
+                swap(copyArr, i, j);
             }
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine());
-		StringBuilder sb = new StringBuilder();
+    private static void swap(int[] copyArr, int index1, int index2) {
+        int tmp = copyArr[index1];
+        copyArr[index1] = copyArr[index2];
+        copyArr[index2] = tmp;
+    }
 
-        for (int i = 1; i <= T; i++) {
-            sb.setLength(0);
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            String[] number = st.nextToken().split("");
-            hit = Integer.parseInt(st.nextToken());
-            if (hit > number.length) hit = number.length;
-            
-            max = Integer.MIN_VALUE;
-            solution(0, number, 0);
-            System.out.println(sb.append("#" + i + " ").append(max));
+    private static int toInteger(int[] number) {
+        String toInt = "";
+        for (int x : number) {
+            toInt += x;
         }
+        return Integer.parseInt(toInt);
     }
 }
