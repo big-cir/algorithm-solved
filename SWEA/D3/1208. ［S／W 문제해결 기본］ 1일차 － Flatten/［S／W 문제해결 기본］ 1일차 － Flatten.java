@@ -1,44 +1,45 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Solution {
-	static int width = 100;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		
-		for (int i = 1; i <= 10; i++) {
-			int dump = sc.nextInt();
-			int[] arr = new int[width];
-			int max = 0, min = 0;
-			int answer = 0;
-			
-			for (int j = 0; j < arr.length; j++) {
-				arr[j] = sc.nextInt(); 
-			}
-						
-			for (int j = 0; j < dump; j++) {
-				int findMax = Arrays.stream(arr).max().getAsInt();
-				int findMin = Arrays.stream(arr).min().getAsInt();
-				
-				for (int k = 0; k < width; k++) {
-					if (findMax == arr[k]) {
-						arr[k] -= 1;
-						break;
-					}
-				}
-				
-				for (int k = 0; k < width; k++) {
-					if (findMin == arr[k]) {
-						arr[k] += 1;
-						break;
-					}
-				}
-		
-				answer = Arrays.stream(arr).max().getAsInt() - Arrays.stream(arr).min().getAsInt();
-			}		
-			
-			System.out.println("#" + i + " " + answer);
-		}
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        for (int tc = 1; tc <= 10; tc++) {
+            int dump = Integer.parseInt(br.readLine());
+            List<Integer> board = Arrays.stream(br.readLine().split(" "))
+                    .map(Integer::parseInt).collect(Collectors.toList());
+
+            for (int i = 0; i < dump; i++) {
+                int maxIndex = getIndexOfMax(board);
+                int minIndex = getIndexOfMin(board);
+                updateBoard(maxIndex, -1, board);
+                updateBoard(minIndex, 1, board);
+            }
+            
+            int findMax = board.get(getIndexOfMax(board));
+            int findMin = board.get(getIndexOfMin(board));
+
+            System.out.println("#" + tc + " " + (findMax - findMin));
+        }
+    }
+
+    private static int getIndexOfMax(List<Integer> board) {
+        int max = Collections.max(board);
+        return board.indexOf(max);
+    }
+
+    private static int getIndexOfMin(List<Integer> board) {
+        int min = Collections.min(board);
+        return board.indexOf(min);
+    }
+
+    private static void updateBoard(int index, int updateValue, List<Integer> board) {
+        board.set(index, board.get(index) + updateValue);
+    }
 }
