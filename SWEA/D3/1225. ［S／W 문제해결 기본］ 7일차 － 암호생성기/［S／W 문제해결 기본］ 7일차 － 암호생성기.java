@@ -1,38 +1,38 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Solution {
-	
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		
-		for (int i = 0; i < 10; i++) {
-			int T = sc.nextInt();
-			
-			List<Integer> list = new ArrayList<>();
-			for (int j = 0; j < 8; j++) {
-				list.add(sc.nextInt());
-			}
-			
-			int count = 1;
 
-			while (list.get(7) > 0) {
-				int tmp = list.get(0) - count;
-				list.remove(list.get(0));
-				
-				if (tmp <= 0) tmp = 0;
-				list.add(tmp);
-				count++;
-				
-				if (count == 6) count = 1;
-			}
-			
-			System.out.print("#" + T + " ");
-			for (int x : list) {
-				System.out.print(x + " ");
-			}
-			System.out.println();
-		}
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        for (int i = 0; i < 10; i++) {
+            int tc = Integer.parseInt(br.readLine());
+            Queue<Integer> queue = new LinkedList<>();
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            while (st.hasMoreTokens()) {
+                queue.add(Integer.parseInt(st.nextToken()));
+            }
+
+            int dec = 1;
+            while (!queue.contains(Integer.valueOf(0))) {
+                int poll = queue.poll();
+                poll -= dec;
+
+                if (poll < 0) poll = 0;
+
+                queue.add(poll);
+                dec++;
+                if (dec == 6) dec = 1;
+            }
+
+            String answer = "";
+            while (!queue.isEmpty()) {
+                answer += String.valueOf(queue.poll() + " ");
+            }
+            System.out.println("#" + tc + " " + answer);
+        }
+    }
 }
