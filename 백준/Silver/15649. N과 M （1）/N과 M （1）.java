@@ -4,35 +4,31 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static int[] ch, answer;
-
-    public static void dfs(int Level, int N, int M) {
-        if (Level == M) {
-            for (int i = 1; i <= M; i++) {
-                System.out.print(answer[i] + " ");
-            }
-            System.out.println();
-            return;
-        } else {
-            for (int i = 1; i <= N; i++) {
-                if (ch[i] == 0) {
-                    ch[i] = 1;
-                    answer[Level + 1] = i;
-                    dfs(Level + 1, N , M);
-                    ch[i] = 0;
-                }
-            }
-        }
-    }
-
+    static int N, M;
+    static int[] ch;
+    static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
         ch = new int[N + 1];
-        answer = new int[M + 1];
+        bf(0, "");
+        System.out.print(sb);
+    }
 
-        dfs(0, N, M);
+    private static void bf(int Level, String str) {
+        if (Level == M) {
+            sb.append(str).append("\n");
+            return;
+        }
+
+        for (int i = 1; i <= N; i++) {
+            if (ch[i] == 0) {
+                ch[i] = 1;
+                bf(Level + 1, str + i + " ");
+                ch[i] = 0;
+            }
+        }
     }
 }
