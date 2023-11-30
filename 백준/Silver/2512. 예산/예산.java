@@ -2,43 +2,39 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class Main {
-    static int N, M; 
-    static int answer;
-    static int[] arr;
+
+    static int N, M;
+    static int[] payment;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        arr = new int[N];
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(st.nextToken());
-        }
+        payment = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         M = Integer.parseInt(br.readLine());
-        answer = 0;
 
-        Arrays.sort(arr);
-        int max = arr[N - 1];
-
+        int answer = 0;
         int lt = 0;
-        int rt = max;
-
+        int rt = Arrays.stream(payment).max().getAsInt();
         while (lt <= rt) {
-            int sum = 0;
             int mid = (lt + rt) / 2;
 
-            for (int x : arr) {
-                if (x > mid) {
-                    sum += mid;
+            int tmpSum = 0;
+            for (int pay : payment) {
+                if (pay <= mid) {
+                    tmpSum += pay;
                     continue;
                 }
-                sum += x;
+                tmpSum += mid;
             }
-            if (sum > M) rt = mid - 1;
-            if (sum <= M) lt = mid + 1;
+
+            if (tmpSum <= M) {
+                answer = mid;
+                lt = mid + 1;
+            } else {
+                rt = mid - 1;
+            }
         }
-        System.out.println(rt);
+        System.out.println(answer);
     }
 }
