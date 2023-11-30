@@ -2,54 +2,42 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class Main {
 
-    public static int findNum(int number, int[] A) {
-        int lt = 0;
-        int rt = A.length;
-        int mid = (lt + rt) / 2;
-
-        while (lt < rt) {
-            if (A[mid] == number) {
-                return number;
-            }
-
-            if (A[mid] < number) {
-                lt = mid + 1;
-                mid = (lt + rt) / 2;
-            } else {
-                rt = mid - 1;
-                mid = (lt + rt) / 2;
-            }
-        }
-        return -1;
-    }
-
+    static int N, M;
+    static int[] arrN, arrM;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        int[] A = new int[N];
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            A[i] = Integer.parseInt(st.nextToken());
-        }
-        Arrays.sort(A);
+        N = Integer.parseInt(br.readLine());
+        arrN = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        M = Integer.parseInt(br.readLine());
+        arrM = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-
-        int M = Integer.parseInt(br.readLine());
-        st = new StringTokenizer(br.readLine());
-
-        // 1
-        for (int i = 0; i < M; i++) {
-            int num = Arrays.binarySearch(A, Integer.parseInt(st.nextToken()));
-            if (num < 0) {
-                System.out.println(0);
-            } else {
+        Arrays.sort(arrN);
+        for (int target : arrM) {
+            if (binarySearch(target)) {
                 System.out.println(1);
+            } else {
+                System.out.println(0);
             }
         }
+    }
 
+    private static boolean binarySearch(int target) {
+        int lt = 0;
+        int rt = N - 1;
+        while (lt <= rt) {
+            int midIdx = (lt + rt) / 2;
+
+            if (arrN[midIdx] == target) return true;
+
+            if (arrN[midIdx] < target) {
+                lt = midIdx + 1;
+            } else {
+                rt = midIdx - 1;
+            }
+        }
+        return false;
     }
 }
