@@ -12,42 +12,25 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        binarySearch(br);
+        setSolution(br);
     }
 
-    private static void binarySearch(BufferedReader br) throws IOException {
+    private static void setSolution(BufferedReader br) throws IOException {
+        Set<String> set = new HashSet<>();
         List<String> answer = new ArrayList<>();
-        heard = new String[N];
+
         for (int i = 0; i < N; i++) {
-            heard[i] = br.readLine();
+            set.add(br.readLine());
         }
-        Arrays.sort(heard);
 
-        int count = 0;
         for (int i = 0; i < M; i++) {
-            String target = br.readLine();
-
-            int lt = 0;
-            int rt = N - 1;
-            while (lt <= rt) {
-                int mid = (lt + rt) / 2;
-
-                if (heard[mid].equals(target)) {
-                    count++;
-                    answer.add(target);
-                    break;
-                }
-
-                if (heard[mid].compareTo(target) < 0) {
-                    lt = mid + 1;
-                } else {
-                    rt = mid - 1;
-                }
+            String str = br.readLine();
+            if (!set.add(str)) {
+                answer.add(str);
             }
         }
-
         Collections.sort(answer);
-        System.out.println(count);
+        System.out.println(answer.size());
         for (String x : answer) {
             System.out.println(x);
         }
