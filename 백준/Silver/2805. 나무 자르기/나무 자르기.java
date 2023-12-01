@@ -6,43 +6,36 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    public static long solution(int[] A, int M) {
-        int answer = 0;
-        int lt = 0;
-        int rt = Arrays.stream(A).max().getAsInt();
+    static int N, M;
+    static int[] height;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        height = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
+        long answer = 0;
+        long lt = 0;
+        long rt = Arrays.stream(height).max().getAsInt();
         while (lt <= rt) {
-            long sum = 0;
-            int mid = (lt + rt) / 2;
+            long mid = (lt + rt) / 2;
 
-            for (int i = 0; i < A.length; i++) {
-                if (A[i] > mid) {
-                    sum += A[i] - mid;
+            long sum = 0;
+            for (int h : height) {
+                if (h > mid) {
+                    sum += (h - mid);
                 }
             }
 
             if (sum >= M) {
+                answer = mid;
                 lt = mid + 1;
             } else {
                 rt = mid - 1;
             }
+
         }
-        return lt - 1;
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        int[] A = new int[N];
-
-        st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            A[i] = Integer.parseInt(st.nextToken());
-        }
-
-        Arrays.sort(A);
-        System.out.println(solution(A, M));
+        System.out.println(answer);
     }
 }
