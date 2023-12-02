@@ -18,16 +18,14 @@ public class Main {
         int rt = N - 1;
         while (lt < rt) {
             int sum = arr[lt] + arr[rt];
-            if (sum == X) {
-                count++;
-                rt--;
-            }
-
             if (sum < X) {
                 lt++;
             }
 
-            if (sum > X) {
+            if (sum >= X) {
+                if (sum == X) {
+                    count++;
+                }
                 rt--;
             }
         }
