@@ -6,15 +6,14 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
+
     static int N;
-    static int[] ch;
     static List<List<Integer>> graph;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        ch = new int[N + 1];
         graph = new ArrayList<>();
-        for (int i = 0 ; i <= N; i++) {
+        for (int i = 0; i <= N; i++) {
             graph.add(new ArrayList<>());
         }
 
@@ -26,20 +25,25 @@ public class Main {
             graph.get(v1).add(v2);
             graph.get(v2).add(v1);
         }
-        int[] parent = new int[N + 1];
-        dfs(1, parent);
+
+        int[] answer = new int[N + 1];
+        int[] ch = new int[N + 1];
+        bfs(1, answer, ch);
 
         for (int i = 2; i <= N; i++) {
-            System.out.println(parent[i]);
+            System.out.println(answer[i]);
         }
     }
 
-    public static void dfs(int vertex,int[] parent) {
-        for (int x : graph.get(vertex)) {
-            if (ch[x] == 0) {
-                ch[x] = 1;
-                parent[x] = vertex;
-                dfs(x, parent);
+    private static void bfs(int vertex, int[] answer, int[] ch) {
+        if (ch[vertex] == 1) return;
+        else {
+            ch[vertex] = 1;
+            for (int nextV : graph.get(vertex)) {
+                if (ch[nextV] == 0) {
+                    answer[nextV] = vertex;
+                    bfs(nextV, answer, ch);
+                }
             }
         }
     }
