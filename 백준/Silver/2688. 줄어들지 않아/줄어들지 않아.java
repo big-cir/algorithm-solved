@@ -18,12 +18,13 @@ public class Main {
 
             for (int j = 2; j <= n; j++) {
                 for (int k = 0; k <= 9; k++) {
+                    long tmp = 0;
                     for (int l = k; l <= 9; l++) {
-                        dp[j][k] += dp[j - 1][l];
+                        tmp += dp[j - 1][l];
                     }
+                    dp[j][k] = tmp;
                 }
             }
-
 
             long answer = 0;
             for (int j = 0; j <= 9; j++) {
