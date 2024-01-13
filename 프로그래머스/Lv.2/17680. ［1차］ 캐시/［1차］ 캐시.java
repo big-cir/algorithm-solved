@@ -19,7 +19,6 @@ class Solution {
             return MISS * cities.length;
         }
 
-
         int answer = 0;
         for (int i = 0; i < cities.length; i++) {
             cities[i] = cities[i].toUpperCase();
@@ -54,7 +53,6 @@ class Solution {
                 }
             }
         }
-
         return answer;
     }
     
