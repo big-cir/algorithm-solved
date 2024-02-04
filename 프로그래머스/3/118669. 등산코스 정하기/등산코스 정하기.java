@@ -20,7 +20,6 @@ class Solution {
     }
     
     public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
-        Arrays.sort(summits);
         graph = new ArrayList<>();
         for (int i = 0; i <= n; i++) graph.add(new ArrayList());
         for (int i = 0; i < paths.length; i++) {
@@ -28,25 +27,22 @@ class Solution {
             graph.get(paths[i][1]).add(new Node(paths[i][0], paths[i][2]));
         }
         int[] answer = {0, Integer.MAX_VALUE};
-        dijkstra(n, gates, summits, answer);
+        for (int gate : gates) {
+            dijkstra(n, gate, summits, answer);
+        }
         return answer;
     }
     
-    public static void dijkstra(int n, int[] gates, int[] summits, int[] answer) {
+    public static void dijkstra(int n, int gate, int[] summits, int[] answer) {
         int[] dis = new int[n + 1];
         Arrays.fill(dis, Integer.MAX_VALUE);
-        Set<Integer> set = Arrays.stream(summits).boxed().collect(Collectors.toSet());
 
         Queue<Node> pq = new PriorityQueue<>();
-        for (int gate : gates) {
-            pq.offer(new Node(gate, 0));
-            dis[gate] = 0;
-        }
+        pq.offer(new Node(gate, 0));
 
         while (!pq.isEmpty()) {
             Node now = pq.poll();
-            
-            if (dis[now.vertex] < now.cost ||set.contains(now.vertex)) continue;
+
 
             for (Node next : graph.get(now.vertex)) {
                 int nextIntensity = Math.max(now.cost, next.cost);
