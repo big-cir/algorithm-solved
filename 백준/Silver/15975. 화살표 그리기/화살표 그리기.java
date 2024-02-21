@@ -21,18 +21,17 @@ public class Main {
             list[color].add(point);
         }
 
-        int answer = 0;
+        long answer = 0;
         for (int i = 1; i <= N; i++) {
             List<Integer> now = list[i];
             Collections.sort(now);
 
-            if (now.size() >= 2) {
-                for (int j = 0; j < now.size(); j++) {
-                    if (j == 0) answer += now.get(j + 1) - now.get(j);
-                    else if (j == now.size() - 1) answer += now.get(j) - now.get(j - 1);
-                    else {
-                        answer += Math.min(now.get(j) - now.get(j - 1), now.get(j + 1) - now.get(j));
-                    }
+            if (now.size() == 1) continue;
+            for (int j = 0; j < now.size(); j++) {
+                if (j == 0) answer += now.get(j + 1) - now.get(j);
+                else if (j == now.size() - 1) answer += now.get(j) - now.get(j - 1);
+                else {
+                    answer += Math.min(now.get(j) - now.get(j - 1), now.get(j + 1) - now.get(j));
                 }
             }
         }
