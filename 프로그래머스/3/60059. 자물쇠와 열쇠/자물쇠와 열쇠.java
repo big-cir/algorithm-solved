@@ -1,80 +1,82 @@
-import java.util.Arrays;
 class Solution {
+    // 1. Lock 확장
+    // 2. 확장된 배열에서 key를 회전하면서 탐색
+    // 3. key를 맞춘 부분 +1, 끝나면 다시 -1
+    // 4. lock 범위가 전부 1이면 true
     public boolean solution(int[][] key, int[][] lock) {
-        // key와 lock의 크기
-        int M = key.length;
-        int N = lock.length;
-        int extendSize = N + 2 * (M - 1);
-        int[][] extendMap = new int[extendSize][extendSize];
+        int nKey = key.length;
+        int nLock = lock.length;
         
-        // 확장된 map에 lock을 고정
-        for (int i = M - 1; i < extendSize - (M - 1); i++) {
-            for (int j = M - 1; j < extendSize - (M - 1); j++) {
-                extendMap[i][j] = lock[i - (M - 1)][j - (M - 1)];
+        // 1.
+        int extendSize = 2 * (nKey - 1) + nLock;
+        int[][] extendLock = new int[extendSize][extendSize];
+        for (int i = nKey - 1; i < extendSize - (nKey - 1); i++) {
+            for (int j = nKey - 1; j < extendSize - (nKey - 1); j++) {
+                int row = i - (nKey - 1);
+                int col = j - (nKey - 1);
+                extendLock[i][j] = lock[row][col];
             }
         }
         
-        // 90, 180, 270 회전하면서 확인한다.
+        // 2.
+        for (int i = 0; i < extendSize - nKey + 1; i++) {
+            for (int j = 0; j < extendSize - nKey + 1; j++) {
+                int[][] copy = new int[nKey][nKey];
+                for (int k = 0; k < nKey; k++) copy[k] = key[k].clone();
+                if (isMatch(i, j, nKey, extendSize, extendLock, copy)) return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private boolean isMatch(int startX, int startY, int nKey, int extendSize, int[][] extendLock, int[][] copy) {
         for (int i = 0; i < 4; i++) {
-            // lock에 key가 맞으면 true를 반환
-            if (isMatched(key, extendMap, M, N)) return true;
-            else {
-                rotation(key);
+            rotation(nKey, copy);
+            
+            for (int j = 0; j < nKey; j++) {
+                for (int k = 0; k < nKey; k++) {
+                    extendLock[startX + j][startY + k] += copy[j][k];
+                }
             }
+            
+            // 키가 맞는지 확인하는 작업
+            boolean check = true;
+            for (int j = nKey - 1; j < extendSize - nKey + 1; j++) {
+                for (int k = nKey - 1; k < extendSize - nKey + 1; k++) {
+                    if (extendLock[j][k] != 1) {
+                        check = false;
+                        break;
+                    }
+                }
+            }
+            
+            if (check) return true;
+            
+            // 3.
+            recovery(startX, startY, nKey, extendLock, copy);
         }
         return false;
     }
     
-    private boolean isMatched(int[][] key, int[][] extendMap, int M, int N) {
-        int[][] copyMap = new int[extendMap.length][extendMap.length];
-        for (int i = 0; i < extendMap.length; i++) {
-            System.arraycopy(extendMap[i], 0, copyMap[i], 0, extendMap[0].length);
-        }
-        
-        // (0, 0)부터 확장된 Map에서 key의 크기만큼 탐색을 진행해야한다.
-        for (int i = 0; i < extendMap.length - M + 1; i++) {
-            for (int j = 0; j < extendMap.length - M + 1; j++) {
-                
-                // 확장된 Map의 lock 부분에 현재 key의 값을 더해준다.
-                for (int k = 0; k < M; k++) {
-                    for (int l = 0; l < M; l++) {
-                        copyMap[i + k][j + l] += key[k][l];
-                    }
-                }
-                
-                // lock이 전부 1인지 확인한다. 1이 아닌 숫자가 있으면 lock에 현재 key가 일치하지 않으므로 false 반환
-                boolean flag = true;
-                for (int k = M - 1; k < extendMap.length - M + 1; k++) {
-                    for (int l = M - 1; l < extendMap.length - M + 1; l++) {
-                        if (copyMap[k][l] != 1) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                }
-                
-                if (flag) return true;
-                
-                // 이전 결과로 되돌린다.
-                for (int k = 0; k < M; k++) {
-                    for (int l = 0; l < M; l++) {
-                        copyMap[i + k][j + l] -= key[k][l];
-                    }
-                }
+    // extendLock 원상 복구
+    private void recovery(int startX, int startY, int nKey, int[][] extendLock, int[][] copy) {
+        for (int i = 0; i < nKey; i++) {
+            for (int j = 0; j < nKey; j++) {
+                extendLock[startX + i][startY + j] -= copy[i][j];
             }
         }
-        return false;
     }
     
-    private void rotation(int[][] key) {
-        int[][] copy = new int[key.length][key[0].length];
-        for (int i = 0; i < key.length; i++) {
-            System.arraycopy(key[i], 0, copy[i], 0, key[0].length);
+    private void rotation(int nKey, int[][] copy) {
+        int[][] tmp = new int[nKey][nKey];
+        for (int i = 0; i < nKey; i++) {
+            tmp[i] = copy[i].clone();
         }
 
-        for (int i = 0; i < key.length; i++) {
-            for (int j = 0; j < key[0].length; j++) {
-                key[i][j] = copy[key.length - 1 - j][i];
+        for (int i = 0; i < nKey; i++) {
+            for (int j = 0; j < nKey; j++) {
+                copy[i][j] = tmp[j][nKey - i - 1];
             }
         }
     }
