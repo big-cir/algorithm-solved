@@ -1,34 +1,39 @@
+
 import java.util.*;
-// ["muzi frodo","apeach frodo","frodo neo","muzi neo","apeach muzi"]
 class Solution {
+    static Map<String, List<String>> map;
+    static Map<String, Integer> reported;
     public int[] solution(String[] id_list, String[] report, int k) {
-        Map<String, Integer> map = new HashMap<>();
-        for (String x : id_list) {
-            map.put(x, 0);
+        map = new HashMap<>();
+        for (String user : id_list) map.put(user, new ArrayList<>());
+        
+        reported = new HashMap<>();
+        for (String str : report) {
+            String[] sArr = str.split(" ");
+            String s1 = sArr[0];
+            String s2 = sArr[1];
+            
+            if (!map.get(s1).contains(s2)) {
+                map.get(s1).add(s2);
+                reported.put(s2, reported.getOrDefault(s2, 0) + 1);
+            }    
         }
         
-        Map<String, List<String>> reportResult = new HashMap<>();
-        for (String x : report) {
-            String[] arr = x.split(" ");
-            if (reportResult.containsKey(arr[1])) {
-                if (!reportResult.get(arr[1]).contains(arr[0])) {
-                    reportResult.get(arr[1]).add(arr[0]);
-                }
-            } else {
-                reportResult.put(arr[1], new ArrayList<String>(List.of(arr[0])));
+        Set<String> banId = new HashSet<>();
+        for (String reportedId : reported.keySet()) {
+            if (reported.get(reportedId) >= k) banId.add(reportedId);
+        }
+        
+        int[] answer = new int[id_list.length];
+        for (int i = 0; i < id_list.length; i++) {
+            int cnt = 0;
+            String repoter = id_list[i];
+            for (String reportId : map.get(repoter)) {
+                if (banId.contains(reportId)) cnt ++;
             }
+            answer[i] = cnt;
         }
         
-        for (String key : reportResult.keySet()) {
-            List<String> reporters = reportResult.get(key);
-            if (reporters.size() >= k) {
-                for (String reporter : reporters) map.put(reporter, map.get(reporter) + 1);
-            }
-        }
-        
-        int[] answer = new int[map.size()];
-        int idx = 0;
-        for (String id : id_list) answer[idx++] = map.get(id);
         return answer;
     }
 }
