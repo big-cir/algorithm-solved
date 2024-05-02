@@ -47,18 +47,20 @@ public class Main {
                 int[] curInfo = queue.poll();
                 int idx = curInfo[0];
                 int dir = curInfo[1];
+                LinkedList<Integer> nowGear = list.get(idx);
 
                 for (int next : graph.get(idx)) {
+                    List<Integer> nextGear = list.get(next);
                     if (ch[next] == 0) {
                         ch[next] = 1;
 
-                        if (next == idx - 1 && list.get(idx).get(6) != list.get(next).get(2)) {
+                        if (next == idx - 1 && nowGear.get(6) != nextGear.get(2)) {
                             if (dir == -1) {
                                 queue.offer(new int[] {next, 1});
                             } else {
                                 queue.offer(new int[] {next, -1});
                             }
-                        } else if (next == idx + 1 && list.get(idx).get(2) != list.get(next).get(6)) {
+                        } else if (next == idx + 1 && nowGear.get(2) != nextGear.get(6)) {
                             if (dir == -1) {
                                 queue.offer(new int[] {next, 1});
                             } else {
@@ -67,12 +69,11 @@ public class Main {
                         }
                     }
                 }
-
-                LinkedList<Integer> tmp = list.get(idx);
+                
                 if (dir == 1) {
-                    tmp.addFirst(tmp.removeLast());
+                    nowGear.addFirst(nowGear.removeLast());
                 } else {
-                    tmp.addLast(tmp.removeFirst());
+                    nowGear.addLast(nowGear.removeFirst());
                 }
             }
         }
