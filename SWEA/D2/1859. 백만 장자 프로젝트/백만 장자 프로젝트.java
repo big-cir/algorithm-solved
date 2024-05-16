@@ -19,7 +19,6 @@ public class Solution {
             for (int j = 0; j < N; j++) {
                 queue.offer(Integer.parseInt(st.nextToken()));
             }
-
             System.out.println("#" + (i + 1) + " " + solution(queue, N));
         }
     }
@@ -44,7 +43,6 @@ public class Solution {
                 save.add(value);
             }
         }
-
         return answer;
     }
 }
