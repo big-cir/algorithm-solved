@@ -10,23 +10,24 @@ public class Solution {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int tc = Integer.parseInt(br.readLine());
+        
         StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < tc; i++) {
+        for (int i = 1; i <= tc; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int N = Integer.parseInt(st.nextToken());
             int K = Integer.parseInt(st.nextToken());
-            int[] pocket = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-
-            Arrays.sort(pocket);
+            int[] pockets = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            Arrays.sort(pockets);
+            
             int answer = Integer.MAX_VALUE;
             for (int j = 0; j < N - K + 1; j++) {
-                int diff = pocket[K - 1 + j] - pocket[j];
+                int diff = pockets[K - 1 + j] - pockets[j];
                 answer = Math.min(diff, answer);
             }
 
-            sb.append("#").append(i + 1).append(" ").append(answer).append("\n");
+            sb.append("#").append(i).append(" ").append(answer).append("\n");
         }
+        
         System.out.println(sb.deleteCharAt(sb.length() - 1));
     }
 }
