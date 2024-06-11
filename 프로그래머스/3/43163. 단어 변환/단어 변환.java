@@ -2,36 +2,54 @@ import java.util.*;
 
 class Solution {
     
-    static int answer = 0;
-    static int[] visit;
-    public int solution(String begin, String target, String[] words) {
-        visit = new int[words.length];
-        dfs(begin, target, words, 0);
+    class Word {
+        private String str;
+        private int step;
         
-        return answer;
+        public Word(String str, int step) {
+            this.str = str;
+            this.step = step;
+        }
     }
     
-    private void dfs(String begin, String target, String[] words, int cnt) {
-        if (begin.equals(target)) {
-            answer = cnt;
-            return;
+    public int solution(String begin, String target, String[] words) {
+        int answer = bfs(begin, target, words);
+        return answer == Integer.MAX_VALUE ? 0 : answer;
+    }
+    
+    private int bfs(String begin, String target, String[] words) {
+        int min = Integer.MAX_VALUE;
+        int[] ch = new int[words.length];
+        
+        Queue<Word> queue = new LinkedList<>();
+        queue.offer(new Word(begin, 0));
+        
+        while (!queue.isEmpty()) {
+            Word now = queue.poll();
+            
+            if (now.str.equals(target)) {
+                min = Math.min(min, now.step);
+                continue;
+            }
+            
+            // 1. 단어 하나를 바꿔 포함되는지
+            // 2. 이미 바꾼건지
+            for (int i = 0; i < words.length; i++) {
+                if (ch[i] == 1) continue;
+                
+                String comp = words[i];
+                int another = 0;
+                for (int j = 0; j < comp.length(); j++) {
+                    if (now.str.charAt(j) != comp.charAt(j)) another++;
+                }
+                
+                if (another == 1) {
+                    ch[i] = 1;
+                    queue.offer(new Word(comp, now.step + 1));
+                }
+            }
         }
         
-        for (int i = 0; i < words.length; i++) {
-            if (visit[i] == 1) continue;
-            
-            String word = words[i];
-            int size = begin.length();
-            int matchCnt = size;;
-            for (int j = 0; j < size; j++) {
-                if (begin.charAt(j) == word.charAt(j)) matchCnt--;
-            }
-            
-            if (matchCnt == 1) {
-                visit[i] = 1;
-                dfs(word, target, words, cnt + 1);
-                visit[i] = 0;
-            }
-        }
+        return min;
     }
 }
