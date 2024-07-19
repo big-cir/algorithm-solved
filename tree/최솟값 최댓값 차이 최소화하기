@@ -1,0 +1,46 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+    
+    static int N, answer;
+    static int[] ch;
+    static int[][] map;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+        map = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            map[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        }
+
+        ch = new int[N];
+        answer = Integer.MAX_VALUE;
+        solution(0, new ArrayList<>());
+        System.out.println(answer);
+    }
+
+    private static void solution(int level, List<Integer> selected) {
+        if (level == N) {
+            answer = Math.min(answer, calculate(selected));
+            return;
+        }
+
+        for (int i = 0; i < N; i++) {
+            if (ch[i] == 0) {
+                ch[i] = 1;
+                selected.add(map[level][i]);
+                solution(level + 1, selected);
+                selected.remove(selected.size() - 1);
+                ch[i] = 0;
+            }
+        }
+    }
+
+    private static int calculate(List<Integer> selected) {
+        int max = Collections.max(selected);
+        int min = Collections.min(selected);
+        return max - min;
+    }
+}
