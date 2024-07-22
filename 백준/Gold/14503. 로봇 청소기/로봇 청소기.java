@@ -1,56 +1,66 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
-public class Main {    
-    
-    static int N, M, r, c, d;
-    static int[][] arr;
-    static int count = 1; //시작 지점은 항상 청소되어 있지 않음
-    static int[] dx = {-1, 0, 1, 0};
-    static int[] dy = {0, 1, 0, -1};
-    
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        
-        N = scan.nextInt();
-        M = scan.nextInt();
-        r = scan.nextInt();
-        c = scan.nextInt();
-        d = scan.nextInt();
-        
-        arr = new int[N][M];
-        for(int i = 0; i < N; i++) {
-            for(int j = 0; j < M; j++) {
-            	arr[i][j] = scan.nextInt();
+public class Main {
+
+    static int N, M, answer;
+    static int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1}; // 북, 동, 남, 서
+    static int[][] map;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int[] size = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        N = size[0];
+        M = size[1];
+        map = new int[N][M];
+
+        // x, y, dir
+        int[] start = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        StringTokenizer st;
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < M; j++) {
+                int value = Integer.parseInt(st.nextToken());
+                map[i][j] = value;
+            }
+        }
+
+        answer = 0;
+        dfs(start);
+        System.out.println(answer);
+    }
+
+    private static void dfs(int[] pos) {
+        int x = pos[0];
+        int y = pos[1];
+        int d = pos[2];
+
+        if (map[x][y] == 0) {
+            map[x][y] = -1;
+            answer++;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            d = (d + 3) % 4;
+            int nx = x + dx[d];
+            int ny = y + dy[d];
+
+            if (nx >= 0 && nx < N && ny >= 0 && ny < M && map[nx][ny] == 0) {
+                dfs(new int[] {nx, ny, d});
+                return;
             }
         }
         
-        clean(r, c, d);
-        System.out.println(count);
-    }    
-    
-    public static void clean(int x, int y, int dir) {
-    	
-    	arr[x][y] = -1; 
-        
-        for(int i = 0; i < 4; i++) {
-        	dir = (dir+3)%4;
-                       
-            int nx = x + dx[dir];
-            int ny = y + dy[dir];
-            if(nx >= 0 && ny >= 0 && nx < N && ny < M) {
-                if(arr[nx][ny] == 0) {
-                    count++;
-                    clean(nx, ny, dir);
-                    return;
-                }
-            }
-        }
-        
-        int d = (dir + 2) % 4; //반대 방향으로 후진
-        int bx = x + dx[d];
-        int by = y + dy[d];
-        if(bx >= 0 && by >= 0 && bx < N && by < M && arr[bx][by] != 1) {
-        	clean(bx, by, dir); //후진이니까 바라보는 방향은 유지
+        int dir = (d + 2) % 4;
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
+
+        if (nx >= 0 && nx < N && ny >= 0 && ny < M && map[nx][ny] != 1) {
+            dfs(new int[]{nx, ny, d});
         }
     }
 }
