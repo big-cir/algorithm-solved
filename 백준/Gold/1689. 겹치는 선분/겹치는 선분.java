@@ -31,15 +31,13 @@ public class Main {
         });
 
         int max = 0;
-        int cnt = 0;
+        int sum = 0l
         for (int i = 0; i < points.size(); i++) {
             int[] point = points.get(i);
             int value = point[1];
 
-            if (value == 1) {
-               cnt++;
-               max = Math.max(cnt, max);
-            } else cnt--;
+            sum += value;
+            max = Math.max(max, sum);
         }
 
         System.out.println(max);
