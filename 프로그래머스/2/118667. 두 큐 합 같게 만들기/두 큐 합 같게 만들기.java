@@ -2,34 +2,36 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] queue1, int[] queue2) {
-        Queue<Integer> q1 = new LinkedList<>();
-        for (int x : queue1) q1.offer(x);
-        
-        Queue<Integer> q2 = new LinkedList<>();
-        for (int x : queue2) q2.offer(x);
-        
+        int N = queue1.length;
+        int M = queue2.length;
+        Queue<Integer> ll1 = new LinkedList<>();
+        Queue<Integer> ll2 = new LinkedList<>();
+
+        for (int i = 0; i < N; i++) {
+            ll1.offer(queue1[i]);
+            ll2.offer(queue2[i]);
+        }
+
         int answer = 0;
-        int size = (queue1.length + queue2.length) * 2;
-        
-        long sum1 = Arrays.stream(queue1).sum();
-        long sum2 = Arrays.stream(queue2).sum();
-        while (answer <= size) {
+        long sum1 = ll1.stream().mapToInt(Integer::intValue).sum();
+        long sum2 = ll2.stream().mapToInt(Integer::intValue).sum();
+        while (answer < 2 * (N + M)) {
             if (sum1 == sum2) break;
-            
-            if (sum1 < sum2) {
-                int val = q2.poll();
-                sum1 += val;
-                sum2 -= val;
-                q1.offer(val);
+            else if (sum1 > sum2) {
+                int value = ll1.poll();
+                sum1 -= value;
+                sum2 += value;
+                ll2.offer(value);
             } else {
-                int val = q1.poll();
-                sum1 -= val;
-                sum2 += val;
-                q2.offer(val);
+                int value = ll2.poll();
+                sum1 += value;
+                sum2 -= value;
+                ll1.offer(value);
             }
             answer++;
         }
-        
-        return answer == size + 1 ? -1 : answer;
+
+        if (answer == 2 * (N + M)) answer = -1;
+        return answer;
     }
 }
