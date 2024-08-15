@@ -10,8 +10,7 @@ public class Main {
 
         list = new ArrayList<>();
         for (int i = 0; i <= N; i++) list.add(new ArrayList<>());
-
-        // 1. parent 정보와 depth 정보가 필요
+        
         int[] depth = new int[N + 1];
         int[] parent = new int[N + 1];
 
@@ -34,20 +33,17 @@ public class Main {
             }
         }
 
-        // depth 구하기
         dfs(root, depth, new int[N + 1]);
 
         st = new StringTokenizer(br.readLine());
         int v1 = Integer.parseInt(st.nextToken());
         int v2 = Integer.parseInt(st.nextToken());
 
-        // 2. 두 정점의 depth가 같아지도록 만들기
         while (depth[v1] != depth[v2]) {
             if (depth[v1] > depth[v2]) v1 = parent[v1];
             if (depth[v2] > depth[v1]) v2 = parent[v2];
         }
 
-        // 3. LCA 구하기
         while (v1 != v2) {
             v1 = parent[v1];
             v2 = parent[v2];
