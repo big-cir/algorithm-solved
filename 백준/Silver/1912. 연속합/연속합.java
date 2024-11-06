@@ -1,36 +1,31 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-    static int N, answer = Integer.MIN_VALUE;
-    static int [] A, dp;
 
-    public static int DFS(int N) {
-        if (N < 0) {
-            return 0;
-        }
-        dp[N] = Math.max(A[N], A[N] + DFS(N - 1));
-        answer = Math.max(answer, dp[N]);
-
-        return dp[N];
-    }
-
+    static int N, K;
+    static int[] arr;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
-        A = new int[N];
-        dp = new int[N];
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            A[i] = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        arr = new int[N + 1];
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 1; i <= N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        dp[0] = A[0];
-        DFS(N - 1);
+        int[] dp = new int[N + 1];
+        dp[1] = arr[1];
+
+        int answer = arr[1];
+        for (int i = 2; i <= N; i++) {
+            dp[i] = Math.max(dp[i - 1] + arr[i], arr[i]);
+            answer = Math.max(answer, dp[i]);
+        }
+
         System.out.println(answer);
     }
 }
