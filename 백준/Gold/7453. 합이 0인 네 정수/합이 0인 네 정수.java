@@ -32,40 +32,44 @@ public class Main {
         Arrays.sort(cd);
 
         long answer = 0;
-        for (long key : ab) {
-            int upper = upperBound(cd, -key);
-            int lower = lowerBound(cd, -key);
+        for (long target : ab) {
+            int upper = upperBound(cd, target);
+            int lower = lowerBound(cd, target);
             answer += (upper - lower);
         }
 
         System.out.println(answer);
     }
 
-    static int upperBound(int[] arr, long find) {
-        int left = 0;
-        int right = arr.length;
-        while (left < right) {
-            int mid = (left + right) / 2;
-            if (arr[mid] <= find) {
-                left = mid + 1;
+    static int upperBound(int[] arr, long target) {
+        int lt = 0;
+        int rt = N * N;
+        while (lt < rt) {
+            int mid = (lt + rt) / 2;
+            long comp = arr[mid];
+            
+            if (comp + target <= 0) {
+                lt = mid + 1;
             } else {
-                right = mid;
+                rt = mid;
             }
         }
-        return right;
+        return rt;
     }
 
-    static int lowerBound(int[] arr, long find) {
-        int left = 0;
-        int right = arr.length;
-        while (left < right) {
-            int mid = (left + right) / 2;
-            if (arr[mid] < find) {
-                left = mid + 1;
+    static int lowerBound(int[] arr, long target) {
+        int lt = 0;
+        int rt = N * N;
+        while (lt < rt) {
+            int mid = (lt + rt) / 2;
+            long comp = arr[mid];
+            
+            if (comp + target < 0) {
+                lt = mid + 1;
             } else {
-                right = mid;
+                rt = mid;
             }
         }
-        return right;
+        return rt;
     }
 }
