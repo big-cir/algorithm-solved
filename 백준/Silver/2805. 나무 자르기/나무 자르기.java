@@ -1,41 +1,44 @@
+import java.io.*;
+import java.util.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
-    static int N, M;
-    static int[] height;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        height = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        int[] arr = new int[N];
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+        }
 
         long answer = 0;
         long lt = 0;
-        long rt = Arrays.stream(height).max().getAsInt();
+        long rt = Arrays.stream(arr).max().getAsInt();
         while (lt <= rt) {
             long mid = (lt + rt) / 2;
-
             long sum = 0;
-            for (int h : height) {
-                if (h > mid) {
-                    sum += (h - mid);
-                }
+            for (int i = 0; i < N; i++) {
+                long gap = arr[i] - mid;
+                if (gap > 0) sum += gap;
             }
 
-            if (sum >= M) {
-                answer = mid;
-                lt = mid + 1;
-            } else {
+            if (M > sum) {
                 rt = mid - 1;
+            } else {
+                answer = Math.max(answer, mid);
+                lt = mid + 1;
             }
-
         }
+
         System.out.println(answer);
     }
 }
