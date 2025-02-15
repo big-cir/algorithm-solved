@@ -1,44 +1,30 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        Stack<Integer> val = new Stack<>();
-        Stack<Integer> pos = new Stack<>();
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            int input = Integer.parseInt(st.nextToken());
-            if (val.isEmpty()) {
-                sb.append(0).append(" ");
-                val.push(input);
-                pos.push(i + 1);
-            } else {
-                while (true) {
-                    if (val.isEmpty()) {
-                        sb.append(0).append(" ");
-                        val.push(input);
-                        pos.push(i + 1);
-                        break;
-                    }
+        int[] arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        Deque<int[]> stack = new ArrayDeque<>();
 
-                    if (val.peek() > input) {
-                        sb.append(pos.peek()).append(" ");
-                        val.push(input);
-                        pos.push(i + 1);
-                        break;
-                    } else {
-                        val.pop();
-                        pos.pop();
-                    }
+        int[] answer = new int[N];
+        for (int i = N - 1; i >= 0; i--) {
+            if (stack.isEmpty()) {
+                stack.push(new int[] {i, arr[i]});
+            } else if (stack.peek()[1] < arr[i]) {
+                while (!stack.isEmpty() && stack.peek()[1] < arr[i]) {
+                    answer[stack.pop()[0]] = i + 1;
                 }
+                stack.push(new int[] {i, arr[i]});
+            } else {
+                stack.push(new int[] {i, arr[i]});
             }
         }
-        System.out.println(sb);
+
+        for (int i = 0; i < N; i++) {
+            System.out.print(answer[i] + " ");
+        }
     }
 }
