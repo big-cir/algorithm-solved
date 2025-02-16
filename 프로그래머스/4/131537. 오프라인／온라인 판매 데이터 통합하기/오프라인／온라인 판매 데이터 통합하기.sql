@@ -1,16 +1,14 @@
-SELECT DATE_FORMAT(SALES_DATE, '%Y-%m-%d') AS SALES_DATE,
-       PRODUCT_ID, 
-       USER_ID, 
-       SALES_AMOUNT
-FROM (
-    SELECT SALES_DATE, PRODUCT_ID, USER_ID, SALES_AMOUNT
-    FROM ONLINE_SALE
-    WHERE DATE_FORMAT(SALES_DATE, '%Y-%m') = '2022-03'
+select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE,
+    PRODUCT_ID, USER_ID, SALES_AMOUNT
+from (
+    select SALES_DATE, PRODUCT_ID, USER_ID, SALES_AMOUNT
+    from ONLINE_SALE
+    where date_format(SALES_DATE, '%Y-%m') = '2022-03'
     
-    UNION ALL
+    union all
     
-    SELECT SALES_DATE, PRODUCT_ID, NULL AS USER_ID, SALES_AMOUNT
-    FROM OFFLINE_SALE
-    WHERE DATE_FORMAT(SALES_DATE, '%Y-%m') = '2022-03'
-) AS combined_sales
-ORDER BY SALES_DATE, PRODUCT_ID, USER_ID;
+    select SALES_DATE, PRODUCT_ID, null as USER_ID, SALES_AMOUNT
+    from OFFLINE_SALE
+    where date_format(SALES_DATE, '%Y-%m') = '2022-03'
+) as combined_sales
+order by SALES_DATE, PRODUCT_ID, USER_ID;
