@@ -1,31 +1,27 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        long[] arr = new long[N];
-        for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(br.readLine());
-        }
-        Arrays.sort(arr);
-
+        int[] input = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int N = input[0];
+        int M = input[1];
+        long[] times = new long[N];
+        for (int i = 0; i < N; i++) times[i] = Long.parseLong(br.readLine());
         long lt = 0;
-        long rt = arr[N - 1] * M;
+        long rt = M * Arrays.stream(times).max().getAsLong();
         long answer = Long.MAX_VALUE;
         while (lt <= rt) {
             long mid = (lt + rt) / 2;
             long cnt = 0;
-            for (int i = 0; i < arr.length; i++) {
-                cnt += (mid / arr[i]);
+            for (long time : times) {
+                cnt += mid / time;
                 
-                if (cnt >= M) break;
+                if (cnt > M) break;
             }
-            
+
             if (cnt < M) {
                 lt = mid + 1;
             } else {
