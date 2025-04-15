@@ -1,48 +1,34 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 class Solution {
-    static int answer;
-    static int[] dx = {-1, 0, 1, 0};
-    static int[] dy = {0, 1, 0, -1};
-    
     public int solution(int[][] maps) {
         int n = maps.length;
         int m = maps[0].length;
-    
-        answer = 0;
-        bfs(0, 0, n, m, maps);
-        return answer;
-    }
-    
-    private void bfs(int x, int y, int n, int m, int[][] maps) {
-        Queue<int[]> queue = new LinkedList<>();
-        int[][] ch = new int[n][m];
-        ch[x][y] = 1;
-        queue.offer(new int[] {x, y});
         
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[] {0, 0});
+        
+        int[] dx = {-1, 0, 1, 0};
+        int[] dy = {0, 1, 0, -1};
         while (!queue.isEmpty()) {
             int[] now = queue.poll();
+            int x = now[0];
+            int y = now[1];
             
+            if (x == n - 1 && y == m - 1) return maps[n - 1][m - 1];
+
             for (int i = 0; i < 4; i++) {
-                int nx = now[0] + dx[i];
-                int ny = now[1] + dy[i];
+                int nx = x + dx[i];
+                int ny = y + dy[i];
                 
-                if (isValid(nx, ny, ch) && maps[nx][ny] == 1) {
-                    ch[nx][ny] = 1;
-                    maps[nx][ny] = maps[now[0]][now[1]] + 1;
+                if (nx >= 0 && nx < n && ny >= 0 && ny < m && maps[nx][ny] == 1) {
+                    maps[nx][ny] = maps[x][y] + 1;
                     queue.offer(new int[] {nx, ny});
                 }
             }
+            
         }
         
-        if (maps[n - 1][m - 1] >= 2) answer = maps[n - 1][m - 1];
-        else {
-            answer = -1;
-        }
-    }
-    
-    private boolean isValid(int nx, int ny, int[][] ch) {
-        return nx >= 0 && nx < ch.length && ny >= 0 && ny < ch[0].length && ch[nx][ny] == 0;
+        return -1;
     }
 }
