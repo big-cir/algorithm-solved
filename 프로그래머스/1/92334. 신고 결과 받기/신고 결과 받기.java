@@ -1,37 +1,38 @@
-
 import java.util.*;
+
 class Solution {
-    static Map<String, List<String>> map;
-    static Map<String, Integer> reported;
     public int[] solution(String[] id_list, String[] report, int k) {
-        map = new HashMap<>();
-        for (String user : id_list) map.put(user, new ArrayList<>());
+        int n = id_list.length;
+        Map<String, Integer> reportResult = new HashMap<>();
+        Map<String, List<String>> reportStatus = new HashMap<>();
+        for (String id : id_list) {
+            reportResult.put(id, 0);
+            reportStatus.put(id, new ArrayList<>());
+        }
         
-        reported = new HashMap<>();
-        for (String str : report) {
-            String[] sArr = str.split(" ");
-            String s1 = sArr[0];
-            String s2 = sArr[1];
+        Set<String> targets = new HashSet<>();
+        for (String r : report) {
+            String[] info = r.split(" ");
+            String id = info[0];
+            String target = info[1];
             
-            if (!map.get(s1).contains(s2)) {
-                map.get(s1).add(s2);
-                reported.put(s2, reported.getOrDefault(s2, 0) + 1);
-            }    
-        }
-        
-        Set<String> banId = new HashSet<>();
-        for (String reportedId : reported.keySet()) {
-            if (reported.get(reportedId) >= k) banId.add(reportedId);
-        }
-        
-        int[] answer = new int[id_list.length];
-        for (int i = 0; i < id_list.length; i++) {
-            int cnt = 0;
-            String repoter = id_list[i];
-            for (String reportId : map.get(repoter)) {
-                if (banId.contains(reportId)) cnt ++;
+            if (!reportStatus.get(id).contains(target)) {
+                reportResult.put(target, reportResult.get(target) + 1);
+                reportStatus.get(id).add(target);   
             }
-            answer[i] = cnt;
+            
+            if (reportResult.get(target) >= k) {
+                targets.add(target);
+            }
+        }
+        
+        int[] answer = new int[n];
+        for (int i = 0; i < id_list.length; i++) {
+            String id = id_list[i];
+            
+            for (String target : targets) {
+                if (reportStatus.get(id).contains(target)) answer[i]++;
+            }
         }
         
         return answer;
