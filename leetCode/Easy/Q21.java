@@ -15,20 +15,20 @@ class Solution {
     
         while (list1 != null || list2 != null) {
             if (list1 == null && list2 != null) {
-                pointer.next = new ListNode(list2.val);
+                pointer.next = list2;
                 list2 = list2.next;
             } else if (list2 == null && list1 != null) {
-                pointer.next = new ListNode(list1.val);
+                pointer.next = list1;
                 list1 = list1.next;
             } else {
                 int v1 = list1.val;
                 int v2 = list2.val;
 
                 if (v2 <= v1) {
-                    pointer.next = new ListNode(v2);
+                    pointer.next = list2;
                     list2 = list2.next;
                 } else {
-                    pointer.next = new ListNode(v1);
+                    pointer.next = list1;
                     list1 = list1.next;
                 }
             }
