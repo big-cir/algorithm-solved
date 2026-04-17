@@ -22,3 +22,25 @@ class Solution {
         return answer;
     }
 }
+
+//
+class Solution {
+    public int maxArea(int[] height) {
+        int p1 = 0, p2 = height.length - 1;
+        int answer = 0;
+        while (p1 < p2) {
+            int p1V = height[p1];
+            int p2V = height[p2];
+
+            if (p1V < p2V) {
+                answer = Math.max(answer, (p2 - p1) * p1V);
+                p1++;
+            } else {
+                answer = Math.max(answer, (p2 - p1) * p2V);
+                p2--;
+            }
+        }
+
+        return answer;
+    }
+}
